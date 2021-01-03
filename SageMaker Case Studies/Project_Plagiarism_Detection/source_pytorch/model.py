@@ -14,7 +14,7 @@ class BinaryClassifier(nn.Module):
     To train a binary classifier in PyTorch, use BCELoss.
     BCELoss is binary cross entropy loss, documentation: https://pytorch.org/docs/stable/nn.html#torch.nn.BCELoss
     """
-
+    
     ## TODO: Define the init function, the input params are required (for loading code in train.py to work)
     def __init__(self, input_features, hidden_dim, output_dim):
         """
@@ -25,7 +25,12 @@ class BinaryClassifier(nn.Module):
         :param output_dim: the number of outputs you want to produce
         """
         super(BinaryClassifier, self).__init__()
-
+        self.fc1 = nn.Linear(input_features,hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim,hidden_dim)
+        self.fc3 = nn.Linear(hidden_dim,output_dim)
+        
+        self.drop = nn.Dropout(p=0.2)
+        self.sig = nn.Sigmoid()
         # define any initial layers, here
         
 
@@ -37,7 +42,13 @@ class BinaryClassifier(nn.Module):
         :param x: A batch of input features of size (batch_size, input_features)
         :return: A single, sigmoid-activated value as output
         """
+        x = self.fc1(x)
+        x = self.drop(x)
+        x = self.fc2(x)
+        x = self.drop(x)
+        x = (self.fc3(x))
         
+        x = self.sig(x)
         # define the feedforward behavior
         
         return x
